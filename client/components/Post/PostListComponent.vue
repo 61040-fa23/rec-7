@@ -6,10 +6,12 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
+import { useSettingsStore } from "../../stores/settings";
 import SearchPostForm from "./SearchPostForm.vue";
 
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
-
+const { suppressedUsers } = storeToRefs(useSettingsStore());
+const { updateSuppressedUsers } = useSettingsStore();
 // TODO: When hidePostsFromSuppressedUsers is true, display text saying "This is a post from a user you've suppressed" in
 // place of the post information for every post by a suppressed user.
 
@@ -66,8 +68,9 @@ onBeforeMount(async () => {
   </div>
   <section class="posts" v-if="loaded && posts.length !== 0">
     <article v-for="post in posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <PostComponent v-if="editing !== post._id && (!hidePostsFromSuppressedUsers || !suppressedUsers.includes(post.author))" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
       <EditPostForm v-else-if="editing" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+      <p v-else>This is a post from a user you've suppressed.</p>
     </article>
   </section>
   <p v-else-if="loaded">No posts found</p>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
+import router from "../../router";
 
 const username = ref("");
 const password = ref("");
@@ -11,9 +12,8 @@ async function login() {
   await updateSession();
   // TODO 3: Once we log in, how can we update the currently logged in user and navigate to their profile?
   // Hint 1: Look at this file in the original starter code to see how we currently do this for 'Home'
-  // Hint 2: Use "await" and NOT "void" when grabbing the logged in user to avoid a thread safety bug.
   // ---------------
-  // Your code here!
+  await router.push({ name: "Profile" });
   // ---------------
 }
 </script>

@@ -19,7 +19,9 @@ onBeforeMount(async () => {
     // TODO 1: When we initially mount our app, how can we navigate to the profile page if they are logged in?
     // Hint: Look at the documentation for the router.push() method
     // ---------------
-    // Your code here!
+    if (isLoggedIn.value) {
+      await router.push("/profile");
+    }
     // ---------------
   } catch {
     // User is not logged in
@@ -42,6 +44,7 @@ onBeforeMount(async () => {
         </li>
         <!-- TODO 2: How can we display the Profile tab in the Nav Bar only if a user is logged in? -->
         <li v-if="isLoggedIn">
+          <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }"> Profile </RouterLink>
           <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }" style="margin-right: 12px"> Settings </RouterLink>
         </li>
         <li v-else>
